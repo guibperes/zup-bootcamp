@@ -13,5 +13,5 @@ import org.springframework.stereotype.Service;
 @Retention(RetentionPolicy.RUNTIME)
 @Service
 @Transactional
-public @interface TransactionService {
+public @interface TransactionalService {
 }

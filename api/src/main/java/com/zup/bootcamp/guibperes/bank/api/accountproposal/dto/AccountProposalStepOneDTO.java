@@ -1,6 +1,7 @@
 package com.zup.bootcamp.guibperes.bank.api.accountproposal.dto;
 
 import java.time.LocalDate;
+import java.time.Period;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
@@ -42,6 +43,10 @@ public class AccountProposalStepOneDTO {
 
   @NotBlank
   @CPF
-  @Size(min = 14, max = 14)
+  @Size(min = 11, max = 11)
   private String cpf;
+
+  public boolean isBirthDateValid() {
+    return Period.between(this.birthDate, LocalDate.now()).getYears() >= 18;
+  }
 }

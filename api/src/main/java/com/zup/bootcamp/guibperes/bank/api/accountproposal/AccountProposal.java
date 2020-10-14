@@ -48,7 +48,7 @@ public class AccountProposal extends BaseEntity {
 
   @NotBlank
   @CPF
-  @Size(min = 14, max = 14)
+  @Size(min = 11, max = 11)
   @Column(unique = true)
   private String cpf;
 
