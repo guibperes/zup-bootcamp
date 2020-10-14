@@ -3,6 +3,7 @@ package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepOneDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
+import com.zup.bootcamp.guibperes.bank.utils.dto.IdDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -12,7 +13,7 @@ public class AccountProposalService {
   @Autowired
   private AccountProposalRepository accountProposalRepository;
 
-  public void stepOne(AccountProposalStepOneDTO accountProposalStepOneDTO) {
+  public IdDTO stepOne(AccountProposalStepOneDTO accountProposalStepOneDTO) {
     if (!accountProposalStepOneDTO.isBirthDateValid()) {
       throw new BadRequestException("age must be at least 18");
     }
@@ -32,6 +33,8 @@ public class AccountProposalService {
     var accountProposal = new AccountProposal();
     accountProposal.mergeFromDTO(accountProposalStepOneDTO);
 
-    accountProposalRepository.save(accountProposal);
+    var savedAccountProposal = accountProposalRepository.save(accountProposal);
+
+    return IdDTO.of(savedAccountProposal.getId());
   }
 }

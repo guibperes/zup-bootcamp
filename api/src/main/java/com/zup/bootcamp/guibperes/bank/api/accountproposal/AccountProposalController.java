@@ -20,7 +20,7 @@ import springfox.documentation.annotations.ApiIgnore;
 
 @RestConfig
 @Api(tags = "AccountProposal")
-@RequestMapping("/accountproposal")
+@RequestMapping("/accountproposals")
 public class AccountProposalController {
 
   @Autowired
@@ -28,6 +28,8 @@ public class AccountProposalController {
 
   @Autowired
   private EnvironmentVariables envVariables;
+
+  private final String controllerPath = "/accountproposals";
 
   @PostMapping
   public ResponseEntity<Void> stepOne(
@@ -38,11 +40,19 @@ public class AccountProposalController {
       throw new BadRequestException(errors.getFieldErrors());
     }
 
-    accountProposalService.stepOne(accountProposalStepOneDTO);
+    var id = accountProposalService.stepOne(accountProposalStepOneDTO);
+
+    var locationHeader = new StringBuilder()
+      .append(envVariables.getApplicationUrl())
+      .append(controllerPath)
+      .append("/")
+      .append(id.getId())
+      .append("/steptwo")
+      .toString();
 
     return ResponseEntity
       .status(HttpStatus.CREATED)
-      .header("Location", envVariables.getApplicationUrl())
+      .header("Location", locationHeader)
       .build();
   }
 }
