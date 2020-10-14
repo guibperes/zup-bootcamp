@@ -22,6 +22,6 @@ public abstract class BaseException extends RuntimeException {
     super(message);
 
     this.status = httpStatus.value();
-    this.error = httpStatus.toString();
+    this.error = httpStatus.getReasonPhrase();
   }
 }
