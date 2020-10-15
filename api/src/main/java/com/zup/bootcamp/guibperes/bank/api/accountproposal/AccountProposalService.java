@@ -9,12 +9,12 @@ import java.util.UUID;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepOneDTO;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepTwoDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
+import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.InternalServerError;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
 import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;
-import com.zup.bootcamp.guibperes.bank.utils.dto.IdDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;

@@ -1,4 +1,4 @@
-package com.zup.bootcamp.guibperes.bank.utils.dto;
+package com.zup.bootcamp.guibperes.bank.base.dtos;
 
 import java.util.UUID;
 
