@@ -1,4 +1,4 @@
-package com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos;
+package com.zup.bootcamp.guibperes.bank.api.address.dtos;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
@@ -14,7 +14,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class AccountProposalStepTwoDTO {
+public class AddressDTO {
 
   @NotBlank
   @Size(min = 8, max = 8)

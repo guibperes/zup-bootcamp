@@ -1,15 +1,15 @@
 package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 
-import java.net.URI;
+import java.util.List;
 import java.util.UUID;
 
 import javax.validation.Valid;
 
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepOneDTO;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepTwoDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
+import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.RestConfig;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
-import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;
+import com.zup.bootcamp.guibperes.bank.utils.URIResolver;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,56 +34,66 @@ public class AccountProposalController {
   private AccountProposalService accountProposalService;
 
   @Autowired
-  private EnvironmentValues env;
+  private URIResolver uriResolver;
 
   private final String controllerPath = "/accountproposals";
 
   @PostMapping
-  public ResponseEntity<Void> stepOne(
-    @RequestBody @Valid AccountProposalStepOneDTO accountProposalStepOneDTO,
+  public ResponseEntity<Void> save(
+    @RequestBody @Valid AccountProposalDTO accountProposalDTO,
     @ApiIgnore Errors errors
   ) {
     if (errors.hasErrors()) {
       throw new BadRequestException(errors.getFieldErrors());
     }
 
-    var id = accountProposalService.stepOne(accountProposalStepOneDTO);
+    var id = accountProposalService.save(accountProposalDTO);
 
-    var locationHeader = new StringBuilder()
-      .append(env.getApplicationUrl())
-      .append(controllerPath)
-      .append("/")
-      .append(id.getId())
-      .append("/steptwo")
-      .toString();
+    // var locationHeader = new StringBuilder()
+    //   .append(env.getApplicationUrl())
+    //   .append(controllerPath)
+    //   .append("/")
+    //   .append(id.getId())
+    //   .append("/steptwo")
+    //   .toString();
+    var location = uriResolver.resolve(List.of(
+      controllerPath,
+      id.getId().toString(),
+      "address"
+    ));
 
     return ResponseEntity
-      .created(URI.create(locationHeader))
+      .created(location)
       .build();
   }
 
-  @PatchMapping("/{proposalId}/steptwo")
+  @PatchMapping("/{proposalId}/address")
   public ResponseEntity<Void> stepTwo(
     @PathVariable UUID proposalId,
-    @RequestBody @Valid AccountProposalStepTwoDTO accountProposalStepTwoDTO,
+    @RequestBody @Valid AddressDTO addressDTO,
     @ApiIgnore Errors errors
   ) {
     if (errors.hasErrors()) {
       throw new BadRequestException(errors.getFieldErrors());
     }
 
-    var id = accountProposalService.stepTwo(proposalId, accountProposalStepTwoDTO);
+    var id = accountProposalService.saveAddress(proposalId, addressDTO);
 
-    var locationHeader = new StringBuilder()
-      .append(env.getApplicationUrl())
-      .append(controllerPath)
-      .append("/")
-      .append(id.getId())
-      .append("/stepthree")
-      .toString();
+    // var locationHeader = new StringBuilder()
+    //   .append(env.getApplicationUrl())
+    //   .append(controllerPath)
+    //   .append("/")
+    //   .append(id.getId())
+    //   .append("/stepthree")
+    //   .toString();
+    var location = uriResolver.resolve(List.of(
+      controllerPath,
+      id.getId().toString(),
+      "stepthree"
+    ));
 
     return ResponseEntity
-      .created(URI.create(locationHeader))
+      .created(location)
       .build();
   }
 
@@ -100,7 +110,7 @@ public class AccountProposalController {
       throw new BadRequestException("Image file must be JPEG type");
     }
 
-    var id = accountProposalService.stepThree(proposalId, file);
+    accountProposalService.stepThree(proposalId, file);
 
     return ResponseEntity
       .ok()

@@ -22,7 +22,7 @@ import lombok.ToString;
 @Getter
 @EqualsAndHashCode
 @ToString
-public class AccountProposalStepOneDTO {
+public class AccountProposalDTO {
 
   @NotBlank
   @Size(min = 3, max = 40)

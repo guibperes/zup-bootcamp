@@ -6,8 +6,9 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepOneDTO;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepTwoDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
+import com.zup.bootcamp.guibperes.bank.api.address.Address;
+import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
@@ -34,42 +35,42 @@ public class AccountProposalService {
       .orElseThrow(() -> new EntityNotFoundedException("Cannot find proposal with provided id"));
   }
 
-  public IdDTO stepOne(AccountProposalStepOneDTO accountProposalStepOneDTO) {
-    if (!accountProposalStepOneDTO.isBirthDateValid()) {
+  public IdDTO save(AccountProposalDTO accountProposalDTO) {
+    if (!accountProposalDTO.isBirthDateValid()) {
       throw new BadRequestException("age must be at least 18");
     }
 
-    var existsByEmail = accountProposalRepository.findByEmail(accountProposalStepOneDTO.getEmail());
+    var existsByEmail = accountProposalRepository.findByEmail(accountProposalDTO.getEmail());
 
     if (existsByEmail.isPresent()) {
       throw new BadRequestException("email already in use");
     }
 
-    var existsByCpf = accountProposalRepository.findByCpf(accountProposalStepOneDTO.getCpf());
+    var existsByCpf = accountProposalRepository.findByCpf(accountProposalDTO.getCpf());
 
     if (existsByCpf.isPresent()) {
       throw new BadRequestException("cpf already in use");
     }
 
-    var accountProposal = new AccountProposal();
-    accountProposal.mergeFromDTO(accountProposalStepOneDTO);
+    var accountProposal = AccountProposal.of(accountProposalDTO);
+    accountProposal.setIsInformationStepCompleted(true);
 
     var savedAccountProposal = accountProposalRepository.save(accountProposal);
-
     return IdDTO.of(savedAccountProposal.getId());
   }
 
-  public IdDTO stepTwo(UUID proposalId, AccountProposalStepTwoDTO accountProposalStepTwoDTO) {
+  public IdDTO saveAddress(UUID proposalId, AddressDTO addressDTO) {
     var accountProposal = findAccountProposalById(proposalId);
 
-    if (!accountProposal.getIsStepOneCompleted()) {
+    if (!accountProposal.getIsInformationStepCompleted()) {
       throw new UnprocessableEntityException("Step one is not completed");
     }
 
-    accountProposal.mergeFromDTO(accountProposalStepTwoDTO);
+    var address = Address.of(addressDTO);
+    accountProposal.setAddress(address);
+    accountProposal.setIsAddressStepCompleted(true);
 
     var savedAccountProposal = accountProposalRepository.save(accountProposal);
-
     return IdDTO.of(savedAccountProposal.getId());
   }
 
