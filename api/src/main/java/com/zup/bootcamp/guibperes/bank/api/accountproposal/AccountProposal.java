@@ -8,8 +8,8 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepOneDTO;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepTwoDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepOneDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepTwoDTO;
 import com.zup.bootcamp.guibperes.bank.base.BaseEntity;
 
 import lombok.AllArgsConstructor;

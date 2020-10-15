@@ -5,8 +5,8 @@ import java.util.UUID;
 
 import javax.validation.Valid;
 
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepOneDTO;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepTwoDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepOneDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepTwoDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.RestConfig;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;

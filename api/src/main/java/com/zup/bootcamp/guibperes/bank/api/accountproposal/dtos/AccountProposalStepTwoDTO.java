@@ -1,4 +1,4 @@
-package com.zup.bootcamp.guibperes.bank.api.accountproposal.dto;
+package com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;

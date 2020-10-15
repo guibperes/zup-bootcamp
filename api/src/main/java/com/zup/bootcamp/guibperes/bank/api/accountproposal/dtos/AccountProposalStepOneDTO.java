@@ -1,4 +1,4 @@
-package com.zup.bootcamp.guibperes.bank.api.accountproposal.dto;
+package com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos;
 
 import java.time.LocalDate;
 import java.time.Period;

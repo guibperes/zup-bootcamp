@@ -6,8 +6,8 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepOneDTO;
-import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepTwoDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepOneDTO;
+import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalStepTwoDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
