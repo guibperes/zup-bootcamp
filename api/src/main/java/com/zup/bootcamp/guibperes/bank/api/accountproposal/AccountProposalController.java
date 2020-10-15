@@ -48,14 +48,6 @@ public class AccountProposalController {
     }
 
     var id = accountProposalService.save(accountProposalDTO);
-
-    // var locationHeader = new StringBuilder()
-    //   .append(env.getApplicationUrl())
-    //   .append(controllerPath)
-    //   .append("/")
-    //   .append(id.getId())
-    //   .append("/steptwo")
-    //   .toString();
     var location = uriResolver.resolve(List.of(
       controllerPath,
       id.getId().toString(),
@@ -78,14 +70,6 @@ public class AccountProposalController {
     }
 
     var id = accountProposalService.saveAddress(proposalId, addressDTO);
-
-    // var locationHeader = new StringBuilder()
-    //   .append(env.getApplicationUrl())
-    //   .append(controllerPath)
-    //   .append("/")
-    //   .append(id.getId())
-    //   .append("/stepthree")
-    //   .toString();
     var location = uriResolver.resolve(List.of(
       controllerPath,
       id.getId().toString(),
