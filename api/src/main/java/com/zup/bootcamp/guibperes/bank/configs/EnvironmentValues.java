@@ -10,6 +10,5 @@ import lombok.Setter;
 @ConfigurationProperties(prefix = "com.zup.bootcamp.guibperes.bank.configs.environment")
 public class EnvironmentValues {
 
-  private String applicationUrl;
   private String imagesFolder;
 }
