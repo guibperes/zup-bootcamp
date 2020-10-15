@@ -13,7 +13,7 @@ import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.InternalServerError;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
-import com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.EnvironmentVariables;
+import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;
 import com.zup.bootcamp.guibperes.bank.utils.dto.IdDTO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +26,7 @@ public class AccountProposalService {
   private AccountProposalRepository accountProposalRepository;
 
   @Autowired
-  private EnvironmentVariables envVariables;
+  private EnvironmentValues env;
 
   private AccountProposal findAccountProposalById(UUID id) {
     return accountProposalRepository
@@ -77,7 +77,7 @@ public class AccountProposalService {
     try (InputStream fileStream = file.getInputStream()) {
       Files.copy(
         fileStream,
-        Path.of(envVariables.getImagesFolder(), file.getOriginalFilename()),
+        Path.of(env.getImagesFolder(), file.getOriginalFilename()),
         StandardCopyOption.REPLACE_EXISTING
       );
     } catch (Exception e) {

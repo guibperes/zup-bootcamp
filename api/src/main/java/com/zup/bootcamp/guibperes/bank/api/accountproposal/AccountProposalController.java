@@ -9,7 +9,7 @@ import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalSt
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dto.AccountProposalStepTwoDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.RestConfig;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
-import com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.EnvironmentVariables;
+import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -34,7 +34,7 @@ public class AccountProposalController {
   private AccountProposalService accountProposalService;
 
   @Autowired
-  private EnvironmentVariables envVariables;
+  private EnvironmentValues env;
 
   private final String controllerPath = "/accountproposals";
 
@@ -50,7 +50,7 @@ public class AccountProposalController {
     var id = accountProposalService.stepOne(accountProposalStepOneDTO);
 
     var locationHeader = new StringBuilder()
-      .append(envVariables.getApplicationUrl())
+      .append(env.getApplicationUrl())
       .append(controllerPath)
       .append("/")
       .append(id.getId())
@@ -75,7 +75,7 @@ public class AccountProposalController {
     var id = accountProposalService.stepTwo(proposalId, accountProposalStepTwoDTO);
 
     var locationHeader = new StringBuilder()
-      .append(envVariables.getApplicationUrl())
+      .append(env.getApplicationUrl())
       .append(controllerPath)
       .append("/")
       .append(id.getId())
