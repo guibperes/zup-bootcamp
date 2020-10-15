@@ -19,8 +19,11 @@ public class EnvironmentConfig {
 
     private static final EnvironmentVariables instance = new EnvironmentVariables();
 
-    @Value("${com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.applicationUrl}")
+    @Value("${com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.application-url}")
     private String applicationUrl;
+
+    @Value("${com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.images-folder}")
+    private String imagesFolder;
 
     private EnvironmentVariables() {}
 

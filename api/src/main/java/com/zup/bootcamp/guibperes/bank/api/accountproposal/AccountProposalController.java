@@ -1,5 +1,6 @@
 package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 
+import java.net.URI;
 import java.util.UUID;
 
 import javax.validation.Valid;
@@ -11,7 +12,6 @@ import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.configs.EnvironmentConfig.EnvironmentVariables;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -19,6 +19,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
+import org.springframework.web.multipart.MultipartFile;
 
 import io.swagger.annotations.Api;
 import springfox.documentation.annotations.ApiIgnore;
@@ -56,8 +58,7 @@ public class AccountProposalController {
       .toString();
 
     return ResponseEntity
-      .status(HttpStatus.CREATED)
-      .header("Location", locationHeader)
+      .created(URI.create(locationHeader))
       .build();
   }
 
@@ -74,6 +75,7 @@ public class AccountProposalController {
     var id = accountProposalService.stepTwo(proposalId, accountProposalStepTwoDTO);
 
     var locationHeader = new StringBuilder()
+      .append(envVariables.getApplicationUrl())
       .append(controllerPath)
       .append("/")
       .append(id.getId())
@@ -81,8 +83,27 @@ public class AccountProposalController {
       .toString();
 
     return ResponseEntity
-      .status(HttpStatus.CREATED)
-      .header("Location", locationHeader)
+      .created(URI.create(locationHeader))
+      .build();
+  }
+
+  @PatchMapping("/{proposalId}/stepthree")
+  public ResponseEntity<Void> stepThree(
+    @PathVariable UUID proposalId,
+    @RequestPart("file") MultipartFile file
+  ) {
+    if (file.isEmpty()) {
+      throw new BadRequestException("Image file is required");
+    }
+
+    if (!file.getContentType().equals("image/jpeg")) {
+      throw new BadRequestException("Image file must be JPEG type");
+    }
+
+    var id = accountProposalService.stepThree(proposalId, file);
+
+    return ResponseEntity
+      .ok()
       .build();
   }
 }
