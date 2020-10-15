@@ -16,6 +16,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
 import com.zup.bootcamp.guibperes.bank.api.address.Address;
+import com.zup.bootcamp.guibperes.bank.api.image.Image;
 import com.zup.bootcamp.guibperes.bank.base.BaseEntity;
 
 import lombok.AllArgsConstructor;
@@ -66,6 +67,11 @@ public class AccountProposal extends BaseEntity {
   @JoinColumn(name = "address_id")
   private Address address;
 
+  @Setter
+  @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+  @JoinColumn(name = "cpf_image_id")
+  private Image cpfImage;
+
   @NotNull
   @Builder.Default
   @Setter
@@ -77,6 +83,12 @@ public class AccountProposal extends BaseEntity {
   @Setter
   @JsonIgnore
   private Boolean isAddressStepCompleted = false;
+
+  @NotNull
+  @Builder.Default
+  @Setter
+  @JsonIgnore
+  private Boolean isImageStepCompleted = false;
 
   public static AccountProposal of(AccountProposalDTO dto) {
     return AccountProposal.builder()

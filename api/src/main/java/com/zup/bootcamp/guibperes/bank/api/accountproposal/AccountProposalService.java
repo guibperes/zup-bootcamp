@@ -1,21 +1,17 @@
 package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 
-import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
 import java.util.UUID;
 
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
 import com.zup.bootcamp.guibperes.bank.api.address.Address;
 import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
+import com.zup.bootcamp.guibperes.bank.api.image.Image;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
-import com.zup.bootcamp.guibperes.bank.base.exceptions.InternalServerError;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
-import com.zup.bootcamp.guibperes.bank.configs.EnvironmentValues;
+import com.zup.bootcamp.guibperes.bank.base.storages.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,7 +23,7 @@ public class AccountProposalService {
   private AccountProposalRepository accountProposalRepository;
 
   @Autowired
-  private EnvironmentValues env;
+  private StorageService storageService;
 
   private AccountProposal findAccountProposalById(UUID id) {
     return accountProposalRepository
@@ -74,18 +70,20 @@ public class AccountProposalService {
     return IdDTO.of(savedAccountProposal.getId());
   }
 
-  public IdDTO stepThree(UUID proposalId, MultipartFile file) {
-    try (InputStream fileStream = file.getInputStream()) {
-      Files.copy(
-        fileStream,
-        Path.of(env.getImagesFolder(), file.getOriginalFilename()),
-        StandardCopyOption.REPLACE_EXISTING
-      );
-    } catch (Exception e) {
-      e.printStackTrace();
-      throw new InternalServerError("Cannot save image on filesytem");
+  public IdDTO saveCpfImage(UUID proposalId, MultipartFile file) {
+    var accountProposal = findAccountProposalById(proposalId);
+
+    if (!accountProposal.getIsAddressStepCompleted()) {
+      throw new UnprocessableEntityException("Step two is not completed");
     }
 
-    return IdDTO.of(proposalId);
+    var fileName = storageService.store(file, proposalId.toString());
+    var image = Image.of(fileName, file.getContentType(), file.getSize());
+
+    accountProposal.setCpfImage(image);
+    accountProposal.setIsImageStepCompleted(true);
+
+    var savedAccountProposal = accountProposalRepository.save(accountProposal);
+    return IdDTO.of(savedAccountProposal.getId());
   }
 }

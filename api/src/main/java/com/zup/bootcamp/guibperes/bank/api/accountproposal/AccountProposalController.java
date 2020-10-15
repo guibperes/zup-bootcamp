@@ -44,7 +44,7 @@ public class AccountProposalController {
     var id = accountProposalService.save(accountProposalDTO);
 
     var location = ServletUriComponentsBuilder.fromCurrentContextPath()
-      .path("/accountproposals")
+      .path("/accountproposals/")
       .path(id.getId().toString())
       .path("/address")
       .build()
@@ -68,9 +68,9 @@ public class AccountProposalController {
     var id = accountProposalService.saveAddress(proposalId, addressDTO);
 
     var location = ServletUriComponentsBuilder.fromCurrentContextPath()
-      .path("/accountproposals")
+      .path("/accountproposals/")
       .path(id.getId().toString())
-      .path("/stepthree")
+      .path("/cpfimage")
       .build()
       .toUri();
 
@@ -79,8 +79,8 @@ public class AccountProposalController {
       .build();
   }
 
-  @PatchMapping("/{proposalId}/stepthree")
-  public ResponseEntity<Void> stepThree(
+  @PatchMapping("/{proposalId}/cpfimage")
+  public ResponseEntity<Void> saveCpfImage(
     @PathVariable UUID proposalId,
     @RequestPart("file") MultipartFile file
   ) {
@@ -92,10 +92,16 @@ public class AccountProposalController {
       throw new BadRequestException("Image file must be JPEG type");
     }
 
-    accountProposalService.stepThree(proposalId, file);
+    var id = accountProposalService.saveCpfImage(proposalId, file);
+
+    var location = ServletUriComponentsBuilder.fromCurrentContextPath()
+      .path("/accountproposals/")
+      .path(id.getId().toString())
+      .build()
+      .toUri();
 
     return ResponseEntity
-      .ok()
+      .created(location)
       .build();
   }
 }
