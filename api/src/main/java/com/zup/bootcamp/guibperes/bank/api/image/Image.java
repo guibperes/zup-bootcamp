@@ -1,6 +1,7 @@
 package com.zup.bootcamp.guibperes.bank.api.image;
 
 import javax.persistence.Entity;
+import javax.persistence.Transient;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -12,6 +13,7 @@ import lombok.Builder;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 import lombok.ToString;
 
 @Entity
@@ -35,6 +37,10 @@ public class Image extends BaseEntity {
 
   @NotNull
   private Long size;
+
+  @Transient
+  @Setter
+  private String url;
 
   public static Image of(String name, String type, Long size) {
     return Image.builder()

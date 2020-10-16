@@ -16,6 +16,7 @@ import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityExcept
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 @TransactionalService
 public class AccountProposalService {
@@ -100,5 +101,23 @@ public class AccountProposalService {
 
     var savedAccountProposal = accountProposalRepository.save(accountProposal);
     return IdDTO.of(savedAccountProposal.getId());
+  }
+
+  public AccountProposal findById(UUID id) {
+    var accountProposal = findAccountProposalById(id);
+    var imageOptional = Optional.ofNullable(accountProposal.getCpfImage());
+
+    if (imageOptional.isPresent()) {
+      var imageUrl = ServletUriComponentsBuilder
+      .fromCurrentContextPath()
+      .path("/images/")
+      .path(imageOptional.get().getId().toString())
+      .build()
+      .toString();
+
+      accountProposal.getCpfImage().setUrl(imageUrl);
+    }
+
+    return accountProposal;
   }
 }

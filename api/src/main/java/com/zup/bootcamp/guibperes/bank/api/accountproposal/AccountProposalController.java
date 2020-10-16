@@ -12,6 +12,7 @@ import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.Errors;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -103,5 +104,10 @@ public class AccountProposalController {
     return ResponseEntity
       .created(location)
       .build();
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<AccountProposal> findById(@PathVariable UUID id) {
+    return ResponseEntity.ok(accountProposalService.findById(id));
   }
 }

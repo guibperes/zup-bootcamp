@@ -2,6 +2,7 @@ package com.zup.bootcamp.guibperes.bank.api.image;
 
 import java.util.UUID;
 
+import com.zup.bootcamp.guibperes.bank.api.image.dtos.ImageDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.storages.StorageService;
@@ -39,5 +40,12 @@ public class ImageService {
 
     storageService.deleteByName(image.getName());
     imageRepository.deleteById(id);
+  }
+
+  public ImageDTO findById(UUID id) {
+    var image = findImageById(id);
+    var resource = storageService.loadByName(image.getName());
+
+    return ImageDTO.of(image.getType(), resource);
   }
 }
