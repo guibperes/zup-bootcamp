@@ -1,9 +1,11 @@
 package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 
+import java.util.Optional;
 import java.util.UUID;
 
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
 import com.zup.bootcamp.guibperes.bank.api.address.Address;
+import com.zup.bootcamp.guibperes.bank.api.address.AddressService;
 import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
 import com.zup.bootcamp.guibperes.bank.api.image.Image;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
@@ -24,6 +26,9 @@ public class AccountProposalService {
 
   @Autowired
   private StorageService storageService;
+
+  @Autowired
+  private AddressService addressService;
 
   private AccountProposal findAccountProposalById(UUID id) {
     return accountProposalRepository
@@ -60,6 +65,12 @@ public class AccountProposalService {
 
     if (!accountProposal.getIsInformationStepCompleted()) {
       throw new UnprocessableEntityException("Step one is not completed");
+    }
+
+    var addressOptional = Optional.ofNullable(accountProposal.getAddress());
+
+    if (addressOptional.isPresent()) {
+      addressService.deleteById(addressOptional.get().getId());
     }
 
     var address = Address.of(addressDTO);
