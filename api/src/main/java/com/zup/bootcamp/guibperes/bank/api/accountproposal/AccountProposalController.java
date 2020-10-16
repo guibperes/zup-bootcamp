@@ -7,6 +7,7 @@ import javax.validation.Valid;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
 import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
 import com.zup.bootcamp.guibperes.bank.base.annotations.RestConfig;
+import com.zup.bootcamp.guibperes.bank.base.dtos.MessageDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -109,5 +110,17 @@ public class AccountProposalController {
   @GetMapping("/{id}")
   public ResponseEntity<AccountProposal> findById(@PathVariable UUID id) {
     return ResponseEntity.ok(accountProposalService.findById(id));
+  }
+
+  @PostMapping("/{proposalId}/accept")
+  public ResponseEntity<MessageDTO> proposalAccept(@PathVariable UUID proposalId) {
+    return ResponseEntity
+      .ok(accountProposalService.proposalAcceptCheck(proposalId, true));
+  }
+
+  @PostMapping("/{proposalId}/reject")
+  public ResponseEntity<MessageDTO> proposalReject(@PathVariable UUID proposalId) {
+    return ResponseEntity
+      .ok(accountProposalService.proposalAcceptCheck(proposalId, false));
   }
 }

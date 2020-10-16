@@ -90,6 +90,10 @@ public class AccountProposal extends BaseEntity {
   @JsonIgnore
   private Boolean isImageStepCompleted = false;
 
+  @Setter
+  @JsonIgnore
+  private Boolean isAccepted;
+
   public static AccountProposal of(AccountProposalDTO dto) {
     return AccountProposal.builder()
       .firstName(dto.getFirstName())

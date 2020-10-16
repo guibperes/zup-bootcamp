@@ -10,6 +10,7 @@ import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
 import com.zup.bootcamp.guibperes.bank.api.image.ImageService;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
+import com.zup.bootcamp.guibperes.bank.base.dtos.MessageDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
@@ -119,5 +120,36 @@ public class AccountProposalService {
     }
 
     return accountProposal;
+  }
+
+  public MessageDTO proposalAcceptCheck(UUID proposalId, Boolean isProposalAccepted) {
+    var accountProposal = findAccountProposalById(proposalId);
+
+    if (
+      !accountProposal.getIsInformationStepCompleted() ||
+      !accountProposal.getIsAddressStepCompleted() ||
+      !accountProposal.getIsImageStepCompleted()
+    ) {
+      throw new UnprocessableEntityException("All steps must be completed");
+    }
+
+    var isProposalAcceptedOptional = Optional.ofNullable(accountProposal.getIsAccepted());
+
+    if (isProposalAcceptedOptional.isPresent()) {
+      var responseMessage = isProposalAcceptedOptional.get()
+        ? "Proposal already accepted"
+        : "Proposal already rejected";
+
+      return MessageDTO.of(responseMessage);
+    }
+
+    accountProposal.setIsAccepted(isProposalAccepted);
+    accountProposalRepository.save(accountProposal);
+
+    var responseMessage = isProposalAccepted
+      ? "Your new account will be created and we will send you an email"
+      : "We will send you an email begging you to accept our proposal";
+
+    return MessageDTO.of(responseMessage);
   }
 }
