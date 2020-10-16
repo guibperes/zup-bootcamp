@@ -7,6 +7,7 @@ import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException
 import com.zup.bootcamp.guibperes.bank.base.storages.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.multipart.MultipartFile;
 
 @TransactionalService
@@ -16,6 +17,7 @@ public class ImageService {
   private ImageRepository imageRepository;
 
   @Autowired
+  @Qualifier("FILE_SYSTEM")
   private StorageService storageService;
 
   private Image findImageById(UUID id) {

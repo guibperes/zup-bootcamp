@@ -15,7 +15,7 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-@Service
+@Service("FILE_SYSTEM")
 public class FilesystemStorageService implements StorageService {
 
   @Autowired
