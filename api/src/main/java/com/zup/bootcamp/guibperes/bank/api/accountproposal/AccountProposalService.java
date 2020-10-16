@@ -7,13 +7,12 @@ import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalD
 import com.zup.bootcamp.guibperes.bank.api.address.Address;
 import com.zup.bootcamp.guibperes.bank.api.address.AddressService;
 import com.zup.bootcamp.guibperes.bank.api.address.dtos.AddressDTO;
-import com.zup.bootcamp.guibperes.bank.api.image.Image;
+import com.zup.bootcamp.guibperes.bank.api.image.ImageService;
 import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.dtos.IdDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
-import com.zup.bootcamp.guibperes.bank.base.storages.StorageService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,10 +24,10 @@ public class AccountProposalService {
   private AccountProposalRepository accountProposalRepository;
 
   @Autowired
-  private StorageService storageService;
+  private AddressService addressService;
 
   @Autowired
-  private AddressService addressService;
+  private ImageService imageService;
 
   private AccountProposal findAccountProposalById(UUID id) {
     return accountProposalRepository
@@ -88,8 +87,13 @@ public class AccountProposalService {
       throw new UnprocessableEntityException("Step two is not completed");
     }
 
-    var fileName = storageService.store(file, proposalId.toString());
-    var image = Image.of(fileName, file.getContentType(), file.getSize());
+    var imageOptional = Optional.ofNullable(accountProposal.getCpfImage());
+
+    if (imageOptional.isPresent()) {
+      imageService.deleteById(imageOptional.get().getId());
+    }
+
+    var image = imageService.save(file, proposalId);
 
     accountProposal.setCpfImage(image);
     accountProposal.setIsImageStepCompleted(true);

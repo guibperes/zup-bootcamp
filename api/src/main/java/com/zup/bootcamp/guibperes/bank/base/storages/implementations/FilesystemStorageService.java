@@ -38,7 +38,7 @@ public class FilesystemStorageService implements StorageService {
   }
 
   @Override
-  public Resource load(String fileName) {
+  public Resource loadByName(String fileName) {
     Path filePath = Path.of(env.getImagesFolder(), fileName);
 
     try {
@@ -52,6 +52,18 @@ public class FilesystemStorageService implements StorageService {
     } catch (Exception e) {
       e.printStackTrace();
       throw new InternalServerError("Cannot load file of filesytem");
+    }
+  }
+
+  @Override
+  public void deleteByName(String fileName) {
+    Path filePath = Path.of(env.getImagesFolder(), fileName);
+
+    try {
+      Files.deleteIfExists(filePath);
+    } catch (Exception e) {
+      e.printStackTrace();
+      throw new InternalServerError("Cannot delete file of filesytem");
     }
   }
 }

@@ -7,5 +7,7 @@ public interface StorageService {
 
   public String store(MultipartFile file, String fileName);
 
-  public Resource load(String fileName);
+  public Resource loadByName(String fileName);
+
+  public void deleteByName(String fileName);
 }

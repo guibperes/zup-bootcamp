@@ -2,12 +2,12 @@ package com.zup.bootcamp.guibperes.bank.api.address;
 
 import java.util.UUID;
 
+import com.zup.bootcamp.guibperes.bank.base.annotations.TransactionalService;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
 
-@Service
+@TransactionalService
 public class AddressService {
 
   @Autowired
