@@ -3,6 +3,7 @@ package com.zup.bootcamp.guibperes.bank.api.accountproposal;
 import java.util.Optional;
 import java.util.UUID;
 
+import com.zup.bootcamp.guibperes.bank.api.account.AccountService;
 import com.zup.bootcamp.guibperes.bank.api.accountproposal.dtos.AccountProposalDTO;
 import com.zup.bootcamp.guibperes.bank.api.address.Address;
 import com.zup.bootcamp.guibperes.bank.api.address.AddressService;
@@ -14,6 +15,8 @@ import com.zup.bootcamp.guibperes.bank.base.dtos.MessageDTO;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.BadRequestException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.EntityNotFoundedException;
 import com.zup.bootcamp.guibperes.bank.base.exceptions.UnprocessableEntityException;
+import com.zup.bootcamp.guibperes.bank.notifications.mail.Mail;
+import com.zup.bootcamp.guibperes.bank.notifications.mail.MailNotificationService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,6 +33,12 @@ public class AccountProposalService {
 
   @Autowired
   private ImageService imageService;
+
+  @Autowired
+  private MailNotificationService mailService;
+
+  @Autowired
+  private AccountService accountService;
 
   private AccountProposal findAccountProposalById(UUID id) {
     return accountProposalRepository
@@ -146,10 +155,23 @@ public class AccountProposalService {
     accountProposal.setIsAccepted(isProposalAccepted);
     accountProposalRepository.save(accountProposal);
 
-    var responseMessage = isProposalAccepted
-      ? "Your new account will be created and we will send you an email"
-      : "We will send you an email begging you to accept our proposal";
+    var mail = Mail.of(
+      accountProposal.getEmail(),
+      "ZUP Bank - Account Proposal",
+      isProposalAccepted
+        ? "Thanks for the preference, your account will be created. This process may take a while."
+        : "Please accept our proposal and we will give you a big discount."
+    );
+    mailService.sendEmailNotification(mail);
 
-    return MessageDTO.of(responseMessage);
+    if(isProposalAccepted) {
+      accountService.asyncCreate(accountProposal);
+    }
+
+    return MessageDTO.of(
+      isProposalAccepted
+        ? "Your new account will be created and we will send you an email"
+        : "We will send you an email begging you to accept our proposal"
+    );
   }
 }

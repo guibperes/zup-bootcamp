@@ -11,4 +11,5 @@ import lombok.Setter;
 public class EnvironmentValues {
 
   private String imagesFolder;
+  private String mailFrom;
 }
