@@ -113,6 +113,7 @@ public class Account extends BaseEntity {
       .cpf(accountProposal.getCpf())
       .birthDate(accountProposal.getBirthDate())
       .address(accountProposal.getAddress())
+      .accountProposal(accountProposal)
       .build();
   }
 }
